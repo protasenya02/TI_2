@@ -236,7 +236,7 @@ public class rsaEncryption {
 
     while (!wasFound) {
 
-      long randomNumber = ThreadLocalRandom.current().nextLong(2, maxValue);
+      long randomNumber = ThreadLocalRandom.current().nextLong(2, maxValue);  // Long.maxValue
 
       if ( isPrime(randomNumber)) {
 
