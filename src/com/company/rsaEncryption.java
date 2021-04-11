@@ -2,44 +2,25 @@ package com.company;
 
 
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class rsaEncryption {
 
   private long p, q, r, f, e, d;
-  
 
-  public ArrayList<Long> encrypt(String openText) {
 
-    ArrayList<Long> cipherText = new ArrayList<>();
+  public String inputOpenText() {
 
-    for (int i=0; i<openText.length(); i++){
-
-      long index = openText.charAt(i);
-      long number  = quickPower(index, e, r);
-      cipherText.add(number);
-
-    }
-
-    return cipherText;
-  }
-
-  public String decipher(ArrayList<Long> cipherText) {
-
-    String openText ="";
-
-    for (int i=0; i<cipherText.size(); i++){
-
-      long number = cipherText.get(i);
-      int symbol = (int) quickPower(number,d,r);
-      openText += (char) symbol;
-
-    }
+    String openText;
+    Scanner input = new Scanner(System.in);
+    System.out.println("Input open text:");
+    openText = input.nextLine();
+    openText = openText.replaceAll("\s", "");
 
     return openText;
   }
-
 
   public void inputP() {
 
@@ -77,32 +58,66 @@ public class rsaEncryption {
     }
   }
 
-  public void calculateR() {
+  public ArrayList<Long> encrypt(String openText) {
+
+    ArrayList<Long> cipherText = new ArrayList<>();
+
+    for (int i=0; i<openText.length(); i++){
+
+      long index = openText.charAt(i);
+      long number  = quickPower(index, e, r);
+      cipherText.add(number);
+
+    }
+
+    return cipherText;
+  }
+
+  public String decipher(ArrayList<Long> cipherText) {
+
+    StringBuilder openText = new StringBuilder();
+
+    for (long number : cipherText) {
+
+      int symbol = (int) quickPower(number, d, r);
+      openText.append((char) symbol);
+
+    }
+
+    return openText.toString();
+  }
+
+  private void calculateR() {
+
     r = p*q;
+
   }
 
-  public void calculateF() {
+  private void calculateF() {
+
     f = (p-1)*(q-1);
+
   }
 
-  public void calculateE() {
+  private void calculateE() {
 
      boolean wasFound = false;
 
      while (!wasFound) {
+         
+         long randomNumber = ThreadLocalRandom.current().nextLong(2,f);
 
-       long randomNumber = ThreadLocalRandom.current().nextLong(2,f);
+         if ( isPrime(randomNumber) && (isCoprime(randomNumber, f))) {
 
-       if ( isPrime(randomNumber) && (isCoprime(randomNumber, f))) {
+           wasFound = true;
+           e = randomNumber;
 
-         wasFound = true;
-         e = randomNumber;
+         }
 
-       }
      }
   }
 
-  public void calculateD() {
+  private void calculateD() {
 
     Triple temp = extendedEuclid(f, e);
     d = temp.getY();
@@ -110,6 +125,15 @@ public class rsaEncryption {
     if (d < 0) {
       d += f;
     }
+
+  }
+
+  public void calculateKeys() {
+
+    calculateR();
+    calculateF();
+    calculateE();
+    calculateD();
 
   }
 
@@ -128,14 +152,14 @@ public class rsaEncryption {
   }
 
   // check is two numbers are mutually prime numbers
-  public boolean isCoprime(long n1, long n2) {
+  private boolean isCoprime(long n1, long n2) {
 
     return (gcdByEuclid(n1, n2) == 1);
 
   }
 
   // search greatest common divisor
-  public long gcdByEuclid(long n1, long n2) {
+  private long gcdByEuclid(long n1, long n2) {
 
     if (n2 == 0) {
       return n1;
@@ -144,7 +168,7 @@ public class rsaEncryption {
     return gcdByEuclid(n2, n1 % n2);
   }
 
-  public Triple extendedEuclid(long a, long b) {
+  private Triple extendedEuclid(long a, long b) {
 
     if (b == 0) {
 
@@ -181,19 +205,56 @@ public class rsaEncryption {
 
   }
 
-  public long getR() {
-    return r;
+  public void outputOpenKey() {
+
+    System.out.println("Open key: {"+e+","+r+"}" );
+
   }
 
-  public long getF() {
-    return f;
+  public void outputPrivateKey() {
+
+    System.out.println("Private key: {"+d+","+r+"}" );
+
   }
 
-  public long getE() {
-    return e;
+  public void generateP(long maxValue) {
+
+    p = randomPrimeNumber(maxValue);
+
   }
 
-  public long getD() {
-    return d;
+  public void generateQ(long maxValue) {
+
+     q = randomPrimeNumber(maxValue);
+
+  }
+
+  private long randomPrimeNumber(long maxValue) {
+
+    boolean wasFound = false;
+    long result = 0;
+
+    while (!wasFound) {
+
+      long randomNumber = ThreadLocalRandom.current().nextLong(2, maxValue);
+
+      if ( isPrime(randomNumber)) {
+
+        wasFound = true;
+        result = randomNumber;
+
+      }
+
+    }
+
+    return result;
+  }
+
+  public long getP() {
+    return p;
+  }
+
+  public long getQ() {
+    return q;
   }
 }

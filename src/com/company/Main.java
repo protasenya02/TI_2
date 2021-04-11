@@ -1,38 +1,47 @@
 package com.company;
 
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.Scanner;
-
 
 public class Main {
 
-    public static void main(String[] args) {
+  public static void main(String[] args) {
 
-      rsaEncryption rsa = new rsaEncryption();
+    rsaEncryption rsa = new rsaEncryption();
 
-      rsa.inputP();
-      rsa.inputQ();
-      rsa.calculateR();
-      rsa.calculateF();
-      rsa.calculateE();
-      rsa.calculateD();
+    // input p and q
+    rsa.inputP();
+    rsa.inputQ();
 
-      System.out.println("r " + rsa.getR());
-      System.out.println("f " + rsa.getF());
-      System.out.println("e " + rsa.getE());
-      System.out.println("d " + rsa.getD());
+    // autogenerate p and q
+//    System.out.println("Intut max value:");
+//    Scanner input = new Scanner(System.in);
+//    long maxValue = input.nextLong();
+//    rsa.generateP(maxValue);
+//    rsa.generateQ(maxValue);
+//    System.out.println("p: "+ rsa.getP());
+//    System.out.println("q: "+ rsa.getQ());
 
-      String openText;
-      Scanner input = new Scanner(System.in);
-      System.out.println("Input open text:");
-      openText = input.nextLine();
-      openText = openText.replaceAll("\s", "");
+    rsa.calculateKeys();
 
-      ArrayList<Long> enctyptArray = rsa.encrypt(openText);
-      System.out.println(enctyptArray.toString());
-      String openTextX = rsa.decipher(enctyptArray);
-      System.out.println(openTextX);
+    System.out.println();
+    rsa.outputOpenKey();
+    rsa.outputPrivateKey();
+    System.out.println();
 
+    String openText = rsa.inputOpenText();
+    ArrayList<Long> enctyptArray = rsa.encrypt(openText);
+
+    StringBuilder encryptText = new StringBuilder();
+    for (Long numb: enctyptArray) {
+      encryptText.append(numb.toString());
     }
+
+    System.out.println("\nEncypt text: " + enctyptArray.toString());
+    System.out.println("Encypt text: " + encryptText);
+
+    String decryptText = rsa.decipher(enctyptArray);
+    System.out.println("Decrypt text : " + decryptText);
+  }
+
 }
