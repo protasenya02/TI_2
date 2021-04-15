@@ -2,9 +2,7 @@ package com.company;
 
 
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.Scanner;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class rsaEncryption {
 
@@ -73,7 +71,7 @@ public class rsaEncryption {
     return cipherText;
   }
 
-  public String decipher(ArrayList<Long> cipherText) {
+  public String decrypt(ArrayList<Long> cipherText) {
 
     StringBuilder openText = new StringBuilder();
 
@@ -104,8 +102,8 @@ public class rsaEncryption {
      boolean wasFound = false;
 
      while (!wasFound) {
-         
-         long randomNumber = ThreadLocalRandom.current().nextLong(2,f);
+
+         long randomNumber = generateRandomNumber(2,f);
 
          if ( isPrime(randomNumber) && (isCoprime(randomNumber, f))) {
 
@@ -115,6 +113,13 @@ public class rsaEncryption {
          }
 
      }
+  }
+
+  public long generateRandomNumber(long leftLimit, long  rightLimit) {
+
+    long generatedNumber = leftLimit + (long) (Math.random() * (rightLimit - leftLimit));
+
+    return  generatedNumber;
   }
 
   private void calculateD() {
@@ -236,7 +241,7 @@ public class rsaEncryption {
 
     while (!wasFound) {
 
-      long randomNumber = ThreadLocalRandom.current().nextLong(2, maxValue);  // Long.maxValue
+      long randomNumber = generateRandomNumber(2, maxValue);
 
       if ( isPrime(randomNumber)) {
 

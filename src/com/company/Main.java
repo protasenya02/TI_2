@@ -1,7 +1,6 @@
 package com.company;
 
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class Main {
 
@@ -10,17 +9,17 @@ public class Main {
     rsaEncryption rsa = new rsaEncryption();
 
     // input p and q
-//    rsa.inputP();
-//    rsa.inputQ();
+    rsa.inputP();
+    rsa.inputQ();
 
     // autogenerate p and q
-    System.out.println("Input max value:");
-    Scanner input = new Scanner(System.in);
-    long maxValue = input.nextLong();
-    rsa.generateP(maxValue);
-    rsa.generateQ(maxValue);
-    System.out.println("p: "+ rsa.getP());
-    System.out.println("q: "+ rsa.getQ());
+//    System.out.println("Input max value:");
+//    Scanner input = new Scanner(System.in);
+//    long maxValue = input.nextLong();
+//    rsa.generateP(maxValue);
+//    rsa.generateQ(maxValue);
+//    System.out.println("p: "+ rsa.getP());
+//    System.out.println("q: "+ rsa.getQ());
 
     rsa.calculateKeys();
 
@@ -40,7 +39,7 @@ public class Main {
     System.out.println("\nEncypt text: " + enctyptArray.toString());
     System.out.println("Encypt text: " + encryptText);
 
-    String decryptText = rsa.decipher(enctyptArray);
+    String decryptText = rsa.decrypt(enctyptArray);
     System.out.println("Decrypt text : " + decryptText);
   }
 
